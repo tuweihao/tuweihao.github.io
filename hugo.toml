@@ -1,0 +1,92 @@
+# 站点根 URL，GitHub Pages 个人主站地址
+baseURL = "https://tuweihao.github.io/"
+
+# 站点标题，会应用到生成的 HTML 元数据
+title = "tuweihao 的博客"
+
+# 使用的主题：Hugo Bear Neo
+theme = "hugo-bearneo"
+
+# 站点默认内容语言（中文）
+defaultContentLanguage = "zh-cn"
+
+# 语言配置（Hugo v0.158+ 推荐写法，替代顶层 languageCode）
+[languages]
+  [languages.zh-cn]
+    locale = "zh-CN"
+    label = "中文"
+    weight = 1
+
+# 生成 robots.txt 供搜索引擎使用
+enableRobotsTXT = true
+
+# 关闭分类法（Bear Blog 风格：保持极简，不用标签分类）
+disableKinds = ["taxonomy"]
+
+# 允许忽略关闭分类法产生的错误
+ignoreErrors = ["error-disable-taxonomy"]
+
+# 文章链接结构：使用 slug 生成简洁 URL
+[permalinks]
+  blog = "/:slug"
+  tags = "/blog/:slug"
+
+[params]
+  # 站点名称（显示在页首）
+  title = "tuweihao"
+
+  # 站点描述，应用到生成的 HTML 元数据
+  description = "记录学习与生活的个人博客，基于 Hugo 和 Bear Neo 主题搭建。"
+
+  # 版权信息，显示在 RSS 和页面底部
+  copyright = "Copyright © 2026, tuweihao."
+
+  # 文章列表按年份分组显示
+  groupByYear = true
+
+  # 显示文章数量
+  showPostCount = true
+
+  # 开启文章搜索框
+  postSearch = true
+
+  # 开启文章目录（TOC）
+  toc = true
+
+  # 开启图片点击缩放
+  imageZoom = true
+
+  # 外部链接在新标签页打开
+  externalLinksNewTab = true
+
+  # 文章点赞功能（需要自行部署 Kudos 服务，暂不开启）
+  upvote = false
+
+[params.footer]
+  # 页脚显示版权信息
+  hideCopyright = false
+  # 页脚显示站点地图链接
+  hideSitemap = false
+  # 页脚显示 Powered by Hugo 字样
+  hideMadeWithLine = false
+  # 页脚显示 RSS 与 Email 链接
+  hideRSSandEmail = false
+
+[params.RSS]
+  # 开启 RSS 订阅
+  enableRSS = true
+  # RSS 每页文章数量限制
+  pageLimit = 10
+
+[params.author]
+  # 作者名称
+  name = "tuweihao"
+  # 作者邮箱（用于 RSS 元数据）
+  email = "llltwh@163.com"
+
+[markup]
+  # 目录（TOC）渲染规则
+  [markup.tableOfContents]
+    # 从 h2 开始渲染到 h3（h1 作为文章主标题不进目录）
+    startLevel = 2
+    endLevel = 3
