@@ -5,6 +5,15 @@ resources/_gen/
 # Hugo 构建锁文件
 .hugo_build.lock
 
+# 本地预览用主题（GitHub Actions 构建时自动拉取，不推送）
+themes/
+
+# Obsidian 编辑器配置
+.obsidian/
+
+# 一次性安装脚本
+setup-git.bat
+
 # 操作系统临时文件
 .DS_Store
 Thumbs.db
