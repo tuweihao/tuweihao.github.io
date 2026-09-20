@@ -1,0 +1,86 @@
+# GitHub Actions 工作流：自动构建 Hugo 站点并部署到 GitHub Pages
+# 参考 Hugo 官方文档推荐的 Pages 部署方案
+name: Deploy Hugo site to Pages
+
+# 触发条件：main 分支有推送时，或手动触发
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# 权限设置：读取代码、写入 Pages、使用 OIDC 令牌
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 并发控制：同一时间只运行一个部署任务，不取消进行中的部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+# 默认使用 bash shell
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # 构建任务
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Hugo 版本号（与本地保持一致）
+      HUGO_VERSION: 0.166.0
+    steps:
+      # 安装 Hugo Extended 命令行工具
+      - name: Install Hugo CLI
+        run: |
+          wget -O $HOME/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i $HOME/hugo.deb
+
+      # 检出仓库代码（完整历史，便于 Hugo 生成最后修改时间）
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 配置 GitHub Pages 环境
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # 克隆 Bear Neo 主题（仓库不保存主题文件，减小仓库体积，主题更新也更方便）
+      - name: Checkout theme
+        run: |
+          git clone --depth 1 https://github.com/rokcso/hugo-bearneo.git themes/hugo-bearneo
+
+      # 使用 Hugo 构建站点（清理缓存、压缩输出、设置正确的 baseURL 和时区）
+      - name: Build with Hugo
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+          HUGO_ENVIRONMENT: production
+          TZ: Asia/Shanghai
+        run: |
+          hugo \
+            --gc \
+            --minify \
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      # 上传构建产物作为 Pages 部署的构件
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  # 部署任务
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
