@@ -26,6 +26,13 @@ disableKinds = ["taxonomy"]
 # 允许忽略关闭分类法产生的错误
 ignoreErrors = ["error-disable-taxonomy"]
 
+# 顶部导航菜单（Home 由主题自动生成，无需配置）
+[menus]
+  [[menus.main]]
+    name = "文章"
+    pageRef = "posts"
+    weight = 10
+
 # 文章链接结构：使用 slug 生成简洁 URL
 [permalinks]
   blog = "/:slug"

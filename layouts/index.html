@@ -1,0 +1,31 @@
+{{ define "main" }}
+<content>
+  <!-- 首页欢迎语：来自 content/_index.md，不填则不显示 -->
+  {{ with .Content }}
+  {{ . }}
+  {{ end }}
+
+  <!-- 最新文章列表：按日期倒序显示最近 5 篇 -->
+  <h3>最新文章</h3>
+  <ul class="blog-posts">
+    {{ $posts := where .Site.RegularPages "Type" "posts" }}
+    {{ if gt (len $posts) 0 }}
+    {{ range first 5 $posts.ByDate.Reverse }}
+    <li>
+      <span class="ungrouped">
+        <i>
+          <time datetime='{{ .Date.Format "2006-01-02" }}' pubdate>{{ .Date.Format "2006-01-02" }}</time>
+        </i>
+      </span>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+    {{ else }}
+    <li>还没有文章</li>
+    {{ end }}
+  </ul>
+
+  <!-- 查看全部文章的入口链接 -->
+  <small><a href="{{ "posts/" | relURL }}">查看全部文章 →</a></small>
+</content>
+{{ end }}
